@@ -9,6 +9,10 @@ module.exports = {
         target: `http://localhost:${PORT}/`,
         logLevel: "debug",
       },
-    },
+    },    
   },
+  lintOnSave: false,
+  transpileDependencies: [
+    "vuetify"
+  ],
 };
