@@ -9,6 +9,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
 
 window.THREE = THREE;
 
@@ -70,6 +71,24 @@ export default {
       });
       let sphere = new THREE.Mesh(geometry, material);
       scene.add(sphere);
+
+      // Add Rhino Geometries
+      const loader = new Rhino3dmLoader();
+      // Specify path to a folder containing WASM/JS libraries or a CDN.
+      loader.setLibraryPath("https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/");
+      // loader.setLibraryPath("rhino3dm/rhino3dm.js");
+
+      loader.load(
+          // "https://taste-test.s3.amazonaws.com/story+of+life.3dm",
+          "https://taste-test.s3.amazonaws.com/LGA+sculpture+export.3dm",
+          function (object) {
+          console.log("object", object);
+          scene.add(object);
+
+          // hide spinner
+          // document.getElementById("loader").style.display = "none";
+          }
+      );
     },
     animate() {
       renderer.setAnimationLoop(() => {
