@@ -1,6 +1,8 @@
 <template>
   <div>
-    <img :src="'/imgs/img.png'" />
+    <div id="threeContainer">
+      <Three />
+    </div>
     <h1>HelloWorld</h1>
     <div>
       <p>Test your backend connection.</p>
@@ -11,7 +13,12 @@
 </template>
 
 <script>
+import Three from "./Three.vue";
+
 export default {
+  components: {
+    Three
+  },
   data() {
     return {
       msg: ""
@@ -30,4 +37,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#threeContainer {
+  height: 600px;
+  width: 100%;
+}
 </style>
