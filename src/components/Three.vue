@@ -17,7 +17,7 @@ window.THREE = THREE;
 
 let container, renderer, scene, camera, controls, composer;
 
-// let sceneContent;
+let sceneContent;
 
 export default {
   data() {
@@ -76,6 +76,8 @@ export default {
     onMouseDown() {},
     onMouseUp() {},
     onBtnClick() {
+      if (sceneContent) scene.remove(sceneContent);
+      let arrayObjects = new THREE.Object3D();
       for (let j = 1; j < 6; j++) {
         for (let i = 0; i < 24; i++) {
           let geometry = new THREE.SphereGeometry(40, 4, 4);
@@ -88,9 +90,11 @@ export default {
           let r = i / 24;
           sphere.position.x = Math.cos(r * Math.PI * 2) * (200 * j);
           sphere.position.z = Math.sin(r * Math.PI * 2) * (200 * j);
-          scene.add(sphere);
+          arrayObjects.add(sphere);
         }
       }
+      sceneContent = arrayObjects;
+      scene.add(sceneContent);
     }
   },
   mounted() {
