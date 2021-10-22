@@ -1,6 +1,9 @@
 <template>
-  <div id="wrapper">
-    <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
+  <div style="height: 100%; width: 100%">
+    <div id="wrapper">
+      <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
+    </div>
+    <input type="button" value="Click Me!" @click="onBtnClick" />
   </div>
 </template>
 
@@ -62,14 +65,6 @@ export default {
         false
       );
       this.onContainerResize();
-
-      let geometry = new THREE.SphereGeometry(400, 32, 32);
-      let material = new THREE.MeshBasicMaterial({
-        color: 0xffff00,
-        wireframe: true
-      });
-      let sphere = new THREE.Mesh(geometry, material);
-      scene.add(sphere);
     },
     animate() {
       renderer.setAnimationLoop(() => {
@@ -79,12 +74,20 @@ export default {
       });
     },
     onMouseDown() {},
-    onMouseUp() {}
+    onMouseUp() {},
+    onBtnClick() {
+      let geometry = new THREE.SphereGeometry(400, 32, 32);
+      let material = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        wireframe: true
+      });
+      let sphere = new THREE.Mesh(geometry, material);
+      scene.add(sphere);
+    }
   },
   mounted() {
     this.init();
     this.animate();
-    setTimeout(this.loadModel, 2000);
   }
 };
 </script>
