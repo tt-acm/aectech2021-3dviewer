@@ -76,13 +76,21 @@ export default {
     onMouseDown() {},
     onMouseUp() {},
     onBtnClick() {
-      let geometry = new THREE.SphereGeometry(400, 32, 32);
-      let material = new THREE.MeshBasicMaterial({
-        color: 0xffff00,
-        wireframe: true
-      });
-      let sphere = new THREE.Mesh(geometry, material);
-      scene.add(sphere);
+      for (let j = 1; j < 6; j++) {
+        for (let i = 0; i < 24; i++) {
+          let geometry = new THREE.SphereGeometry(40, 4, 4);
+          let material = new THREE.MeshBasicMaterial({
+            color: 0xffff00,
+            wireframe: true
+          });
+          let sphere = new THREE.Mesh(geometry, material);
+
+          let r = i / 24;
+          sphere.position.x = Math.cos(r * Math.PI * 2) * (200 * j);
+          sphere.position.z = Math.sin(r * Math.PI * 2) * (200 * j);
+          scene.add(sphere);
+        }
+      }
     }
   },
   mounted() {
