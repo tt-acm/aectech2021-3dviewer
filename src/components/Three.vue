@@ -12,6 +12,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 window.THREE = THREE;
 
@@ -77,23 +78,15 @@ export default {
     onMouseUp() {},
     onBtnClick() {
       if (sceneContent) scene.remove(sceneContent);
-      let arrayObjects = new THREE.Object3D();
-      for (let j = 1; j < 6; j++) {
-        for (let i = 0; i < 24; i++) {
-          let geometry = new THREE.SphereGeometry(40, 4, 4);
-          let material = new THREE.MeshBasicMaterial({
-            color: 0xffff00,
-            wireframe: true
-          });
-          let sphere = new THREE.Mesh(geometry, material);
-
-          let r = i / 24;
-          sphere.position.x = Math.cos(r * Math.PI * 2) * (200 * j);
-          sphere.position.z = Math.sin(r * Math.PI * 2) * (200 * j);
-          arrayObjects.add(sphere);
-        }
-      }
-      sceneContent = arrayObjects;
+      let sceneObject = new THREE.Object3D();
+      let gltfLoader = new GLTFLoader();
+      let url = "models/gltf/forest_house/scene.gltf";
+      gltfLoader.load(url, gltf => {
+        let modelData = gltf.scene;
+        sceneObject.add(modelData);
+        sceneContent = sceneObject;
+        scene.add(sceneContent);
+      });
       scene.add(sceneContent);
     }
   },
