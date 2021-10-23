@@ -12,7 +12,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
 
 window.THREE = THREE;
 
@@ -53,6 +53,11 @@ export default {
       composer = new EffectComposer(renderer);
       composer.addPass(new RenderPass(scene, camera));
 
+      scene.add(new THREE.AmbientLight(0xffffff));
+      let light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(-20, 40, 0);
+      scene.add(light);
+
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.2;
@@ -79,15 +84,16 @@ export default {
     onBtnClick() {
       if (sceneContent) scene.remove(sceneContent);
       let sceneObject = new THREE.Object3D();
-      let gltfLoader = new GLTFLoader();
-      let url = "models/gltf/forest_house/scene.gltf";
-      gltfLoader.load(url, gltf => {
-        let modelData = gltf.scene;
-        sceneObject.add(modelData);
+      let rh3dmLoader = new Rhino3dmLoader();
+      rh3dmLoader.setLibraryPath(
+        "https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/"
+      );
+      rh3dmLoader.load("models/3dm/story+of+life.3dm", function(model) {
+        console.log(model);
+        sceneObject.add(model);
         sceneContent = sceneObject;
         scene.add(sceneContent);
       });
-      scene.add(sceneContent);
     }
   },
   mounted() {
