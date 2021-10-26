@@ -1,6 +1,9 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from "firebase/firestore"
-import { getAuth } from "firebase/auth";
+import firebase from 'firebase/app';
+import fbAuth from 'firebase/auth'
+import 'firebase/firestore'
+var firebaseui = require('firebaseui');
+import "firebaseui/dist/firebaseui.css";
+
 
 // firebase init
 const firebaseConfig = {
@@ -13,30 +16,18 @@ const firebaseConfig = {
   appId: ''
 }
 
-const app = initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 
 // utils
-const db = getFirestore(app);
-console.log("db", db);
-console.log("app", app);
-const auth = getAuth();
-// console.log("auth", auth);
-
-// collection references
-
-
-const usersCollection = getDocs(collection(db, "users"));
-// const usersCollection = db.collection('users')
-// const postsCollection = db.collection('posts')
-// const commentsCollection = db.collection('comments')
-// const likesCollection = db.collection('likes')
+const db = firebase.firestore()
+const auth = firebase.auth()
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+const usersCollection = db.collection('users')
 
 // export utils/refs
 export {
   db,
   auth,
   usersCollection,
-//   postsCollection,
-//   commentsCollection,
-//   likesCollection
+  ui
 }
