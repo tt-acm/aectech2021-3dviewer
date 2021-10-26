@@ -3,7 +3,7 @@
     <div id="wrapper">
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
-    <input type="button" value="Click Me!" @click="onBtnClick" />
+    <input type="button" value="Load Model!" @click="onBtnClick" />
   </div>
 </template>
 
@@ -13,6 +13,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import * as utils from "@/utils/index.js";
 
 window.THREE = THREE;
 
@@ -39,7 +40,7 @@ export default {
         10,
         10000000
       );
-      camera.position.set(300, 800, 600);
+      camera.position.set(-700, 800, -200);
       camera.lookAt(new THREE.Vector3());
 
       scene = new THREE.Scene();
@@ -48,6 +49,8 @@ export default {
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.xr.enabled = true;
       renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setClearColor(0xf2f2f2);
       container.appendChild(renderer.domElement);
 
       composer = new EffectComposer(renderer);
@@ -57,6 +60,10 @@ export default {
       controls.enableDamping = true;
       controls.dampingFactor = 0.2;
       controls.update();
+
+      let groundGrid = utils.makeGrid(100000, 10, 10, "#cccccc", "#dedede");
+      groundGrid.rotation.x = -Math.PI / 2;
+      scene.add(groundGrid);
 
       window.addEventListener(
         "resize",
