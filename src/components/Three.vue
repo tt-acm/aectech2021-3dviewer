@@ -4,7 +4,7 @@
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
     <!-- <input type="button" value="Click Me!" @click="onBtnClick" /> -->
-    <v-btn color="primary" @click="onBtnClick">
+    <v-btn color="primary" @click="onBtnClick" style="margin-top:50px">
       Load Model
     </v-btn>
   </div>
@@ -16,6 +16,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
+import { mapState } from 'vuex';
 
 window.THREE = THREE;
 
@@ -91,18 +92,30 @@ export default {
       rh3dmLoader.setLibraryPath(
         "https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/"
       );
-      rh3dmLoader.load("models/3dm/story+of+life.3dm", function(model) {
-        console.log(model);
-        sceneObject.add(model);
-        sceneContent = sceneObject;
-        scene.add(sceneContent);
+
+      this.downloadFromStorage().then(url => {
+        console.log("loading  this url", url);
+        rh3dmLoader.load(url, function(model) {
+          sceneObject.add(model);
+          sceneContent = sceneObject;
+          scene.add(sceneContent);
+        });
       });
+    },
+    downloadFromStorage() {
+      // Create a reference to the file we want to download
+      var starsRef = this.fbStorage.child("models/story+of+life.3dm");
+      // Get the download URL
+      return starsRef.getDownloadURL();
     }
   },
   mounted() {
     this.init();
     this.animate();
-  }
+  },
+  computed: {
+    ...mapState(['fbStorage', 'fbDB'])
+  },
 };
 </script>
 

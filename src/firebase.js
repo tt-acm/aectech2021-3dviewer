@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import fbAuth from 'firebase/auth'
+import 'firebase/storage'
 import 'firebase/firestore'
 var firebaseui = require('firebaseui');
 import "firebaseui/dist/firebaseui.css";
@@ -22,12 +22,14 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore()
 const auth = firebase.auth()
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
+var storage = firebase.storage().ref();
 const usersCollection = db.collection('users')
 
 // export utils/refs
 export {
   db,
   auth,
+  storage,
   usersCollection,
   ui
 }
