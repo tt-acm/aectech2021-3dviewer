@@ -3,7 +3,10 @@
     <div id="wrapper">
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
-    <input type="button" value="Click Me!" @click="onBtnClick" />
+    <!-- <input type="button" value="Click Me!" @click="onBtnClick" /> -->
+    <v-btn color="primary" @click="onBtnClick">
+      Load Model
+    </v-btn>
   </div>
 </template>
 
