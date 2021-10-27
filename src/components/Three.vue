@@ -73,6 +73,11 @@ export default {
       controls.dampingFactor = 0.2;
       controls.update();
 
+      scene.add(new THREE.AmbientLight(0xffffff));
+      let light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(-20, 40, 0);
+      scene.add(light);
+
       this.updateGridVisibility();
 
       window.addEventListener(
