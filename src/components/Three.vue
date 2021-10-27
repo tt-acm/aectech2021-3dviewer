@@ -3,10 +3,7 @@
     <div id="wrapper">
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
-    <!-- <input type="button" value="Click Me!" @click="onBtnClick" /> -->
-    <v-btn color="primary" @click="onBtnClick" style="margin-top:50px">
-      Load Model
-    </v-btn>
+
   </div>
 </template>
 
@@ -16,7 +13,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
-import { mapState } from 'vuex';
 
 window.THREE = THREE;
 
@@ -26,7 +22,8 @@ let sceneContent;
 
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   methods: {
     onContainerResize() {
@@ -85,7 +82,7 @@ export default {
     },
     onMouseDown() {},
     onMouseUp() {},
-    onBtnClick() {
+    onBtnClick(url) {      
       if (sceneContent) scene.remove(sceneContent);
       let sceneObject = new THREE.Object3D();
       let rh3dmLoader = new Rhino3dmLoader();
@@ -93,13 +90,14 @@ export default {
         "https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/"
       );
 
-      this.downloadFromStorage().then(url => {
-        console.log("loading  this url", url);
-        rh3dmLoader.load(url, function(model) {
-          sceneObject.add(model);
-          sceneContent = sceneObject;
-          scene.add(sceneContent);
-        });
+      const vueApp = this;
+      rh3dmLoader.load(url, function(model) {
+        console.log("loading completed");
+        vueApp.$emit('loading-complete', true);
+
+        sceneObject.add(model);
+        sceneContent = sceneObject;
+        scene.add(sceneContent);        
       });
     },
     downloadFromStorage() {
@@ -112,10 +110,7 @@ export default {
   mounted() {
     this.init();
     this.animate();
-  },
-  computed: {
-    ...mapState(['fbStorage', 'fbDB'])
-  },
+  }
 };
 </script>
 

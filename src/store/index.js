@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-      userProfile: null,
+      user: null,
       loginUI: fb.ui,
       fbAuth: fb.auth,
       fbStorage: fb.storage,
@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     },
     mutations: {
       setUserProfile(state, val) {
-        state.userProfile = val
+        state.user = val
       }
     },
     actions: {  

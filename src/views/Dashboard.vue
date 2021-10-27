@@ -15,7 +15,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userProfile'])
+    ...mapState(['user'])
   },
   methods: {
     
