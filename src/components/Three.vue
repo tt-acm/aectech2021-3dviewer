@@ -11,7 +11,16 @@
         @click="setGridVisibility(!gridVisibility)"
       />
       <br />
-      Colour Scheme:
+      Scale:
+      <input
+        type="range"
+        v-model="scaleFactor"
+        min="0.1"
+        max="100"
+        @change="updateScale"
+      />
+      {{ scaleFactor }}
+      <br />
     </div>
   </div>
 </template>
@@ -34,7 +43,8 @@ let groundGrid;
 export default {
   data() {
     return {
-      gridVisibility: true
+      gridVisibility: true,
+      scaleFactor: 10
     };
   },
   methods: {
@@ -79,6 +89,7 @@ export default {
       scene.add(light);
 
       this.updateGridVisibility();
+      this.updateScale();
 
       window.addEventListener(
         "resize",
@@ -125,6 +136,11 @@ export default {
         scene.add(gg);
         groundGrid = gg;
       }
+    },
+    updateScale() {
+      if (!sceneContent) return;
+      let sF = this.scaleFactor;
+      sceneContent.scale.set(sF, sF, sF);
     }
   },
   mounted() {
