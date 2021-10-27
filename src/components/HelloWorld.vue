@@ -18,14 +18,7 @@ export default {
       msg: ""
     };
   },
-  methods: {
-    runCheck() {
-      console.log("Making request");
-      fetch("/api/test")
-        .then(data => data.text())
-        .then(res => (this.msg = res));
-    }
-  }
+  methods: {}
 };
 </script>
 
