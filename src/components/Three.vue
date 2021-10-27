@@ -99,12 +99,6 @@ export default {
         sceneContent = sceneObject;
         scene.add(sceneContent);        
       });
-    },
-    downloadFromStorage() {
-      // Create a reference to the file we want to download
-      var starsRef = this.fbStorage.child("models/story+of+life.3dm");
-      // Get the download URL
-      return starsRef.getDownloadURL();
     }
   },
   mounted() {
