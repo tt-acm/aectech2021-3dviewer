@@ -3,7 +3,16 @@
     <div id="wrapper">
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
-    <input type="button" value="Load Model!" @click="onBtnClick" />
+    <div id="controlsContainer">
+      <input type="button" value="Load Model!" @click="onBtnClick" />
+      <input
+        type="button"
+        value="Toggle Grid"
+        @click="setGridVisibility(!gridVisibility)"
+      />
+      <br />
+      Colour Scheme:
+    </div>
   </div>
 </template>
 
@@ -20,10 +29,13 @@ window.THREE = THREE;
 let container, renderer, scene, camera, controls, composer;
 
 let sceneContent;
+let groundGrid;
 
 export default {
   data() {
-    return {};
+    return {
+      gridVisibility: true
+    };
   },
   methods: {
     onContainerResize() {
@@ -61,9 +73,7 @@ export default {
       controls.dampingFactor = 0.2;
       controls.update();
 
-      let groundGrid = utils.makeGrid(100000, 10, 10, "#cccccc", "#dedede");
-      groundGrid.rotation.x = -Math.PI / 2;
-      scene.add(groundGrid);
+      this.updateGridVisibility();
 
       window.addEventListener(
         "resize",
@@ -95,6 +105,19 @@ export default {
         scene.add(sceneContent);
       });
       scene.add(sceneContent);
+    },
+    setGridVisibility(newVal) {
+      this.gridVisibility = newVal;
+      this.updateGridVisibility();
+    },
+    updateGridVisibility() {
+      if (groundGrid) scene.remove(groundGrid);
+      if (this.gridVisibility) {
+        let gg = utils.makeGrid(100000, 10, 10, "#cccccc", "#dedede");
+        gg.rotation.x = -Math.PI / 2;
+        scene.add(gg);
+        groundGrid = gg;
+      }
     }
   },
   mounted() {
@@ -119,5 +142,12 @@ export default {
   margin: 0px;
   padding: 0px;
   overflow: hidden;
+}
+
+#controlsContainer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 4px;
 }
 </style>
