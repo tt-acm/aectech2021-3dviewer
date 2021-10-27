@@ -95,16 +95,18 @@ export default {
     onMouseUp() {},
     onBtnClick() {
       if (sceneContent) scene.remove(sceneContent);
+      let that = this;
       let sceneObject = new THREE.Object3D();
       let gltfLoader = new GLTFLoader();
-      let url = "models/gltf/forest_house/scene.gltf";
+      let url = "models/gltf/3d_modern_bungalow/scene.gltf";
       gltfLoader.load(url, gltf => {
         let modelData = gltf.scene;
+        that.updateScale();
+        console.log(modelData);
         sceneObject.add(modelData);
         sceneContent = sceneObject;
         scene.add(sceneContent);
       });
-      scene.add(sceneContent);
     },
     setGridVisibility(newVal) {
       this.gridVisibility = newVal;
