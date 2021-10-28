@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="threeContainer">
-      <Three ref="threeViewer" @loading-complete="loadingCompleted"/>
+      <Three ref="threeViewer" :gridVisibility="gridVisibility" @loading-complete="loadingCompleted"/>
     </div>
 
     <div class="text-center">
@@ -84,8 +84,39 @@
     </div>
 
     <v-row style="margin:10px; position:absolute; left:0px; top:0px">
-        <v-btn color="primary" @click="showNewModelDialog = true"> Upload a New Model </v-btn>
-        <v-btn color="secondary" @click="launchModelLoader()" style="margin-left:20px" > Load Existing Models </v-btn>
+      <v-btn color="primary" @click="showNewModelDialog = true"> Upload a New Model </v-btn>
+      <v-btn color="secondary" @click="launchModelLoader()" style="margin-left:20px" > Load Existing Models </v-btn>
+    </v-row>
+
+    <v-row style="margin:10px; position:absolute; left:0px; bottom:0px">
+      <div class="d-flex">
+        <div class="mx-2">
+          <v-btn small dark fab color="primary" @click="zoomAll()">
+            <v-icon dark>
+              mdi-magnify
+            </v-icon>
+          </v-btn>
+        </div>
+        <div class="mx-2" style="width: 300px;">
+          <v-slider
+            thumb-label
+            hint="Scale"
+            min="0.1"
+            max="100"
+            @change="updateScale()"
+          ></v-slider>
+        </div>
+        <div class="mx-2">
+          <v-checkbox
+            v-model="gridVisibility"
+            dense
+            label="Grid"
+            color="grey"
+            hide-details
+            @change="updateGridVisibility()"
+          ></v-checkbox>
+        </div>
+      </div>
     </v-row>
     
   </div>
@@ -117,12 +148,14 @@ export default {
       loadSingle: true,
       itemsPerPage:5,
       modelLoading: false,
+      gridVisibility: true
     };
   },
   computed: {
     ...mapState(['fbStorage', 'fbDB', "user"])
   },
   mounted() {
+    this.$refs.threeViewer.setGridVisibility(this.gridVisibility);
   },
   methods: {
     submitFiles() {
@@ -170,6 +203,15 @@ export default {
     loadingCompleted(val) {
       this.modelLoading = false;
       this.showModelLoaderDialog = false;
+    },
+    zoomAll() {
+      this.$refs.threeViewer.onBtnClickZoomAll();
+    },
+    updateScale() {
+      this.$refs.threeViewer.updateScale();
+    },
+    updateGridVisibility() {
+      this.$refs.threeViewer.setGridVisibility(this.gridVisibility);
     }
   }
 };

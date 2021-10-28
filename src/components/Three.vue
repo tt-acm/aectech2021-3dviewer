@@ -35,6 +35,8 @@ export default {
       renderer.setSize(container.clientWidth, container.clientHeight);
     },
     init() {
+      this.gridVisibility = !!this.gridVisibility;
+
       container = document.getElementById("container");
 
       camera = new THREE.PerspectiveCamera(
@@ -134,7 +136,8 @@ export default {
         camera.lookAt(center);
       }
     },
-    setGridVisibility() {
+    setGridVisibility(newVal) {
+      this.gridVisibility = newVal;
       this.updateGridVisibility();
     },
     updateGridVisibility() {
