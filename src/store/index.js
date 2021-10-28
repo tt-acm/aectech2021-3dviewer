@@ -11,11 +11,15 @@ const store = new Vuex.Store({
       loginUI: fb.ui,
       fbAuth: fb.auth,
       fbStorage: fb.storage,
-      fbDB: fb.db
+      fbDB: fb.db,
+      loadedModel: null
     },
     mutations: {
       setUserProfile(state, val) {
         state.user = val
+      },
+      SetCurrentLoadedModel(state, val) {
+        state.loadedModel = val;
       }
     },
     actions: {  

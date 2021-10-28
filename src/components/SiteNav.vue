@@ -2,7 +2,7 @@
   <div>    
     <v-system-bar height="60">
       <div style="z-index: 12; right: 10px; position: absolute;">
-        <v-btn v-show="!user" @click="showLoginOptions = !showLoginOptions" text>
+        <v-btn v-show="!user" @click="showLoginOptions = !showLoginOptions" color="success">
           Login
         </v-btn>
 
@@ -56,7 +56,7 @@ export default {
     console.log("user", this.user);
     // var ui = new firebaseui.auth.AuthUI(firebase.auth());
     var uiConfig = {
-        signInSuccessUrl: "/profile",
+        signInSuccessUrl: "/",
         signInOptions: [
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           // {
