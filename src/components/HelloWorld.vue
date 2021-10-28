@@ -83,7 +83,7 @@
 
     </div>
 
-    <v-row style="margin:10px; position:absolute; left:0px; top:0px">
+    <v-row style="margin:10px; position:absolute; left:0px; top:0px; z-index: 12;">
       <v-btn color="primary" @click="showNewModelDialog = true"> Upload a New Model </v-btn>
       <v-btn color="secondary" @click="launchModelLoader()" style="margin-left:20px" > Load Existing Models </v-btn>
     </v-row>
@@ -225,5 +225,6 @@ export default {
   top:0px;
   right:0px;
   bottom: 0px;
+  z-index: 0;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>    
     <v-system-bar height="60">
-      <div style="margin-left:auto">
+      <div style="z-index: 12; right: 10px; position: absolute;">
         <v-btn v-show="!user" @click="showLoginOptions = !showLoginOptions" text>
           Login
         </v-btn>
@@ -26,7 +26,17 @@
       </div>      
     </v-system-bar>
 
-    <section v-show="showLoginOptions" id="firebaseui-auth-container" style="position: absolute;right: 0;top:0;text-align: center;margin-top:40px"></section>  
+    <section
+      v-show="showLoginOptions"
+      id="firebaseui-auth-container"
+      style="
+        position: absolute;
+        right: 0px;
+        top: 50px;
+        text-align: center;
+        z-index: 10;
+      "
+    ></section>  
       
   </div> 
 </template>
