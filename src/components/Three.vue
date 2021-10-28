@@ -4,12 +4,16 @@
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
     <div id="controlsContainer">
-      <input type="button" value="Load Model!" @click="onBtnClick" />
+      <input type="button" value="Load Model" @click="onBtnClickLoadModel" />
+      <br />
+      <input type="button" value="Zoom All" @click="onBtnClickZoomAll" />
       <input
-        type="button"
-        value="Toggle Grid"
-        @click="setGridVisibility(!gridVisibility)"
+        type="checkbox"
+        v-model="gridVisibility"
+        id="gridToggle"
+        @change="setGridVisibility(!gridVisibility)"
       />
+      <label for="gridToggle">Grid</label>
       <br />
       Scale:
       <input
@@ -20,7 +24,6 @@
         @change="updateScale"
       />
       {{ scaleFactor }}
-      <br />
     </div>
   </div>
 </template>
@@ -109,7 +112,7 @@ export default {
     },
     onMouseDown() {},
     onMouseUp() {},
-    onBtnClick() {
+    onBtnClickLoadModel() {
       if (sceneContent) scene.remove(sceneContent);
       let that = this;
       let sceneObject = new THREE.Object3D();
@@ -124,8 +127,34 @@ export default {
         scene.add(sceneContent);
       });
     },
-    setGridVisibility(newVal) {
-      this.gridVisibility = newVal;
+    onBtnClickZoomAll() {
+      if (!sceneContent) return;
+      // ref: https://discourse.threejs.org/t/camera-zoom-to-fit-object/936/3
+      const offset = 1.25;
+      const boundingBox = new THREE.Box3();
+      boundingBox.setFromObject(sceneContent);
+      const center = new THREE.Vector3();
+      boundingBox.getCenter(center);
+      const size = new THREE.Vector3();
+      boundingBox.getSize(size);
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = camera.fov * (Math.PI / 180);
+      let cameraZ = Math.abs((maxDim / 4) * Math.tan(fov * 2));
+      cameraZ *= offset;
+      camera.position.z = cameraZ;
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = minZ < 0 ? -minZ + cameraZ : cameraZ - minZ;
+      camera.far = cameraToFarEdge * 10;
+      camera.updateProjectionMatrix();
+      if (controls) {
+        controls.target = center;
+        controls.maxDistance = cameraToFarEdge * 2;
+        controls.saveState();
+      } else {
+        camera.lookAt(center);
+      }
+    },
+    setGridVisibility() {
       this.updateGridVisibility();
     },
     updateGridVisibility() {
