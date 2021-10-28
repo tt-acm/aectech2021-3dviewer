@@ -164,7 +164,7 @@ export default {
       var starsRef = this.fbStorage.child(model.modelUrl);
       // Get the download URL
       starsRef.getDownloadURL().then(url => {
-        this.$refs.threeViewer.onBtnClick(url);
+        this.$refs.threeViewer.onBtnClickLoadModel(url);
       });
     },
     loadingCompleted(val) {
