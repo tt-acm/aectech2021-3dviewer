@@ -220,7 +220,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #threeContainer {
-  height: 600px;
-  width: 100%;
+  position: absolute;
+  left: 0px;
+  top:0px;
+  right:0px;
+  bottom: 0px;
 }
 </style>
