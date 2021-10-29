@@ -24,7 +24,6 @@
     "three": "^0.133.1",
     "vue": "^2.6.11",
     "vue-cli-plugin-vuetify": "^2.4.3",
-    "vue-router": "^3.5.2",
     "vuetify": "^2.5.10",
     "vuetify-loader": "^1.7.3",
     "vuex": "^3.6.2"
