@@ -103,6 +103,7 @@ export default {
       const vueApp = this;
       rh3dmLoader.load(url, function(model) {
         sceneObject.add(model);
+        sceneObject.rotation.x = -Math.PI / 2;
         sceneContent = sceneObject;
         scene.add(sceneContent);
         console.log("loading completed");
