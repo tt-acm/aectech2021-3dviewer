@@ -21,8 +21,9 @@
               required
             ></v-text-field>
 
+            <!-- File Uploader -->
             <v-file-input
-              v-model="files"
+              v-model="filesForUpload"
               placeholder="Upload a model"
               label="File input"
               multiple
@@ -50,7 +51,7 @@
               color="primary"
               text
               @click="submitFiles();modelUploading=true"
-              :disabled="!newModelName || files.length < 1"
+              :disabled="!newModelName || filesForUpload.length < 1"
             >
               Upload!                       
             </v-btn>
@@ -109,6 +110,7 @@
 
     </div>
 
+    <!-- Buttons for uploading/ loading/ sharing models -->
     <v-row style="margin:10px; position:absolute; left:0px; top:0px; z-index: 12;">
       <v-btn color="primary" @click="showNewModelDialog = true" :disabled="!user"> Upload a New Model </v-btn>
       <v-btn color="secondary" @click="launchModelLoader()" style="margin-left:20px; margin-right:20px" > Load Existing Models </v-btn>
@@ -161,7 +163,7 @@ export default {
   },
   data() {
     return {
-      files: [],
+      filesForUpload: [],
       newModelName: null,
       showNewModelDialog: false,
       showModelLoaderDialog: false,
@@ -171,12 +173,10 @@ export default {
       LoadingTableHeaders:[
         { text: 'Model Name', value: 'name' },
         { text: 'Public', value: 'isPublic' },
-        // { text: 'Directory', value: 'modelUrl' },        
         { text: 'Author', value: 'author.name' },        
         { text: 'Upload Date', value: 'uploaded' },
         { text: '', value: 'loadingAction', sortable: false },
       ],
-      loadSingle: true,
       itemsPerPage:5,
       modelLoading: false,
       gridVisibility: true,
@@ -184,11 +184,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['fbStorage', 'fbDB', "fbAuth", "user", "loadedModel"])
+    ...mapState(['fbStorage', 'fbDB', "user", "loadedModel"])
   },
   watch:{
     loadedModel(model) {
-      console.log("model changed", model)      
       this.loadModel(model);   
       this.enableShare = true;
     }
@@ -199,7 +198,7 @@ export default {
   methods: {
     submitFiles() {
       // Upload model to storage and add a record in db.
-      this.fbStorage.child('models/' +  this.files[0].name).put(this.files[0])
+      this.fbStorage.child('models/' +  this.filesForUpload[0].name).put(this.filesForUpload[0])
       .then(snapshot => {
           this.fbDB.collection('models').add({
             name: this.newModelName,
@@ -212,7 +211,7 @@ export default {
 
               // File Uploaded, clear out old inputs
               this.newModelName = null;
-              this.files = [];
+              this.filesForUpload = [];
               this.modelUploading = false;
               this.showNewModelDialog = false;
           })
@@ -223,7 +222,7 @@ export default {
     },
     launchModelLoader() {  
       this.existingModels = [];    
-      this.showModelLoaderDialog = true;
+      this.showModelLoaderDialog = true; // Launch model loader popup
 
       if (this.user) {
         // If logged in, get user's model
@@ -236,7 +235,7 @@ export default {
         });   
       }
         
-      // Get all public models      
+      // Next, get all public models      
       this.fbDB.collection('models').where("isPublic", "==", true).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const docData = doc.data();
@@ -246,7 +245,6 @@ export default {
               this.existingModels.push(docData);
             }            
         });
-        // this.showModelLoaderDialog = true;
       });  
     },
     setCurrentModel(model) {
@@ -256,9 +254,9 @@ export default {
     loadModel(model) {
       if (!model) return;
 
-      // this.$store.commit("SetCurrentLoadedModel", model);
       this.modelLoading = true
       var modelRef = this.fbStorage.child(model.modelUrl);
+      
       // Get the download URL
       modelRef.getDownloadURL().then(url => {
         this.$refs.threeViewer.onBtnClickLoadModel(url);
