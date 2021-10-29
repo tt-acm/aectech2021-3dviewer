@@ -103,6 +103,16 @@ export default {
       const vueApp = this;
       rh3dmLoader.load(url, function(model) {
         sceneObject.add(model);
+
+        let edgesObj = new THREE.Object3D();
+        for ( let i = 0; i < model.children.length; i++ ) {
+          let mesh = model.children[i];
+          let edges = new THREE.EdgesGeometry( mesh.geometry );
+          let line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+          edgesObj.add( line );
+        }
+        sceneObject.add(edgesObj);
+
         sceneObject.rotation.x = -Math.PI / 2;
         sceneContent = sceneObject;
         scene.add(sceneContent);
