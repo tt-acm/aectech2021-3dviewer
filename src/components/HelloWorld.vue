@@ -63,7 +63,7 @@
       <v-dialog v-model="showModelLoaderDialog" width="500">
         <v-card>
           <v-card-title class="text-h5 grey lighten-2">
-            Load Exist Model
+            Load Existing Model
           </v-card-title>
 
           <v-data-table
@@ -72,6 +72,10 @@
             :items-per-page="itemsPerPage"
             class="elevation-1"
           >
+          <template v-slot:item.isPublic="{ item }">
+            <v-icon small v-if="item.isPublic"> mdi-check</v-icon>
+          </template> 
+
           <template v-slot:item.loadingAction="{ item }">
             <v-icon small @click="setCurrentModel(item)"> mdi-plus-circle</v-icon>
           </template>         
@@ -86,11 +90,11 @@
       <v-dialog v-model="showSharingDialog" width="500">
         <v-card>
           <v-card-title class="text-h5 grey lighten-2">
-            Manage User Access
+            Manage Access
           </v-card-title>
 
           <v-card-text v-if="loadedModel">
-            <v-switch v-model="loadedModel.isPublic" label="Allow Public Access?" ></v-switch>            
+            <v-switch v-model="loadedModel.isPublic" label="Make this model public?" ></v-switch>            
           </v-card-text>
          
           <v-progress-linear v-show="modelLoading" color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
@@ -106,7 +110,7 @@
     </div>
 
     <v-row style="margin:10px; position:absolute; left:0px; top:0px; z-index: 12;">
-      <v-btn color="primary" @click="showNewModelDialog = true"> Upload a New Model </v-btn>
+      <v-btn color="primary" @click="showNewModelDialog = true" :disabled="!user"> Upload a New Model </v-btn>
       <v-btn color="secondary" @click="launchModelLoader()" style="margin-left:20px; margin-right:20px" > Load Existing Models </v-btn>
       <v-btn class="mx-2" fab dark small color="indigo" @click="showSharingDialog=true" :disabled="!enableShare">
         <v-icon dark> mdi-share </v-icon>
@@ -166,10 +170,11 @@ export default {
       existingModels: [],
       LoadingTableHeaders:[
         { text: 'Model Name', value: 'name' },
+        { text: 'Public', value: 'isPublic' },
         // { text: 'Directory', value: 'modelUrl' },        
-        { text: 'Author', value: 'author' },        
+        { text: 'Author', value: 'author.name' },        
         { text: 'Upload Date', value: 'uploaded' },
-        { text: 'Actions', value: 'loadingAction', sortable: false },
+        { text: '', value: 'loadingAction', sortable: false },
       ],
       loadSingle: true,
       itemsPerPage:5,
@@ -200,9 +205,8 @@ export default {
             name: this.newModelName,
             modelUrl: snapshot.ref.fullPath,
             uploaded: new Date().toISOString(),
-            author: this.user.displayName,
+            author: {_id: this.user.uid, name: this.user.displayName},
             isPublic: false,
-            users:[{email: this.user.email}]            
           }).then((docRef) => {
               console.log("Document written with ID: ", docRef.id);
 
@@ -219,14 +223,31 @@ export default {
     },
     launchModelLoader() {  
       this.existingModels = [];    
-      this.fbDB.collection('models').get().then((querySnapshot) => {
+      this.showModelLoaderDialog = true;
+
+      if (this.user) {
+        // If logged in, get user's model
+        this.fbDB.collection('models').where('author._id', "==", this.user.uid).get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+              const docData = doc.data();
+              docData['_id'] = doc.id;
+              this.existingModels.push(docData);
+          });
+        });   
+      }
+        
+      // Get all public models      
+      this.fbDB.collection('models').where("isPublic", "==", true).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const docData = doc.data();
             docData['_id'] = doc.id;
-            this.existingModels.push(docData);
+            if (this.existingModels.map(m => m._id).indexOf(doc.id) < 0) {
+              // Checked for duplicates
+              this.existingModels.push(docData);
+            }            
         });
-        this.showModelLoaderDialog = true;
-      });      
+        // this.showModelLoaderDialog = true;
+      });  
     },
     setCurrentModel(model) {
       if (!model) return;
