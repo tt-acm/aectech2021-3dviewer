@@ -1,16 +1,16 @@
 <template>
   <div>    
     <v-system-bar height="60">
-      <div style="margin-left:auto">
-        <v-btn v-show="!userProfile" @click="showLoginOptions = !showLoginOptions" text>
+      <div style="z-index: 12; right: 10px; position: absolute;">
+        <v-btn v-show="!user" @click="showLoginOptions = !showLoginOptions" color="success">
           Login
         </v-btn>
 
-        <v-menu v-if="userProfile" open-on-hover offset-y>
+        <v-menu v-if="user" open-on-hover offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon>
               <v-avatar color="red">
-                <span class="white--text text-h5">{{userProfile.displayName | getNameInitials}}</span>
+                <span class="white--text text-h5">{{user.displayName | getNameInitials}}</span>
               </v-avatar>
             </v-btn>
           </template>
@@ -26,7 +26,17 @@
       </div>      
     </v-system-bar>
 
-    <section v-show="showLoginOptions" id="firebaseui-auth-container" style="position: absolute;right: 0;top:0;text-align: center;margin-top:40px"></section>  
+    <section
+      v-show="showLoginOptions"
+      id="firebaseui-auth-container"
+      style="
+        position: absolute;
+        right: 0px;
+        top: 50px;
+        text-align: center;
+        z-index: 10;
+      "
+    ></section>  
       
   </div> 
 </template>
@@ -43,10 +53,10 @@ export default {
     };
   },
   mounted() {
-    console.log("userProfile", this.userProfile);
+    console.log("user", this.user);
     // var ui = new firebaseui.auth.AuthUI(firebase.auth());
     var uiConfig = {
-        signInSuccessUrl: "/profile",
+        signInSuccessUrl: "/",
         signInOptions: [
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           // {
@@ -88,7 +98,7 @@ export default {
     this.loginUI.start("#firebaseui-auth-container", uiConfig);    
   },
   computed: {      
-    ...mapState(['userProfile', 'loginUI'])
+    ...mapState(['user', 'loginUI'])
   },
   methods: {
     signoutButtonPressed(e) {

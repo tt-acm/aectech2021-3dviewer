@@ -22,6 +22,6 @@ auth.onAuthStateChanged(user => {
   }
 
   // if (user) {
-    store.commit('setUserProfile', user);
+    store.commit('setUserProfile', user);    
   // }
 })
