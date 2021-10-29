@@ -1,6 +1,12 @@
 <template>
-  <div id="wrapper">
-    <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
+  <div style="height: 100%; width: 100%">
+    <div id="wrapper">
+      <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
+    </div>
+    <!-- <input type="button" value="Click Me!" @click="onBtnClick" /> -->
+    <v-btn color="primary" @click="onBtnClick">
+      Load Model
+    </v-btn>
   </div>
 </template>
 
@@ -9,12 +15,13 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
 
 window.THREE = THREE;
 
 let container, renderer, scene, camera, controls, composer;
 
-// let sceneContent;
+let sceneContent;
 
 export default {
   data() {
@@ -49,6 +56,11 @@ export default {
       composer = new EffectComposer(renderer);
       composer.addPass(new RenderPass(scene, camera));
 
+      scene.add(new THREE.AmbientLight(0xffffff));
+      let light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(-20, 40, 0);
+      scene.add(light);
+
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.2;
@@ -62,14 +74,6 @@ export default {
         false
       );
       this.onContainerResize();
-
-      let geometry = new THREE.SphereGeometry(400, 32, 32);
-      let material = new THREE.MeshBasicMaterial({
-        color: 0xffff00,
-        wireframe: true
-      });
-      let sphere = new THREE.Mesh(geometry, material);
-      scene.add(sphere);
     },
     animate() {
       renderer.setAnimationLoop(() => {
@@ -79,12 +83,25 @@ export default {
       });
     },
     onMouseDown() {},
-    onMouseUp() {}
+    onMouseUp() {},
+    onBtnClick() {
+      if (sceneContent) scene.remove(sceneContent);
+      let sceneObject = new THREE.Object3D();
+      let rh3dmLoader = new Rhino3dmLoader();
+      rh3dmLoader.setLibraryPath(
+        "https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/"
+      );
+      rh3dmLoader.load("models/3dm/story+of+life.3dm", function(model) {
+        console.log(model);
+        sceneObject.add(model);
+        sceneContent = sceneObject;
+        scene.add(sceneContent);
+      });
+    }
   },
   mounted() {
     this.init();
     this.animate();
-    setTimeout(this.loadModel, 2000);
   }
 };
 </script>
