@@ -231,7 +231,6 @@ export default {
     setCurrentModel(model) {
       if (!model) return;
       this.$store.commit("SetCurrentLoadedModel", model);
-      this.showModelLoaderDialog = false;
     },
     loadModel(model) {
       if (!model) return;
@@ -247,6 +246,7 @@ export default {
     loadingCompleted(val) {
       this.modelLoading = false;
       this.showModelLoaderDialog = false;
+      this.zoomAll(); //Zoom in after loading
     },
     zoomAll() {
       this.$refs.threeViewer.onBtnClickZoomAll();
