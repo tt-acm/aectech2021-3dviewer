@@ -3,28 +3,6 @@
     <div id="wrapper">
       <div id="container" @mousedown="onMouseDown" @mouseup="onMouseUp"></div>
     </div>
-    <div id="controlsContainer">
-      <input type="button" value="Load Model" @click="onBtnClickLoadModel" />
-      <br />
-      <input type="button" value="Zoom All" @click="onBtnClickZoomAll" />
-      <input
-        type="checkbox"
-        v-model="gridVisibility"
-        id="gridToggle"
-        @change="setGridVisibility(!gridVisibility)"
-      />
-      <label for="gridToggle">Grid</label>
-      <br />
-      Scale:
-      <input
-        type="range"
-        v-model="scaleFactor"
-        min="0.1"
-        max="100"
-        @change="updateScale"
-      />
-      {{ scaleFactor }}
-    </div>
   </div>
 </template>
 
@@ -33,7 +11,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
 import * as utils from "@/utils/index.js";
 
 window.THREE = THREE;
@@ -57,6 +35,8 @@ export default {
       renderer.setSize(container.clientWidth, container.clientHeight);
     },
     init() {
+      this.gridVisibility = !!this.gridVisibility;
+
       container = document.getElementById("container");
 
       camera = new THREE.PerspectiveCamera(
@@ -112,19 +92,21 @@ export default {
     },
     onMouseDown() {},
     onMouseUp() {},
-    onBtnClickLoadModel() {
+    onBtnClickLoadModel(url) {
       if (sceneContent) scene.remove(sceneContent);
-      let that = this;
       let sceneObject = new THREE.Object3D();
-      let gltfLoader = new GLTFLoader();
-      let url = "models/gltf/3d_modern_bungalow/scene.gltf";
-      gltfLoader.load(url, gltf => {
-        let modelData = gltf.scene;
-        that.updateScale();
-        console.log(modelData);
-        sceneObject.add(modelData);
+      let rh3dmLoader = new Rhino3dmLoader();
+      rh3dmLoader.setLibraryPath(
+        "https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/"
+      );
+
+      const vueApp = this;
+      rh3dmLoader.load(url, function(model) {
+        sceneObject.add(model);
         sceneContent = sceneObject;
         scene.add(sceneContent);
+        console.log("loading completed");
+        vueApp.$emit('loading-complete', true);
       });
     },
     onBtnClickZoomAll() {
@@ -154,7 +136,8 @@ export default {
         camera.lookAt(center);
       }
     },
-    setGridVisibility() {
+    setGridVisibility(newVal) {
+      this.gridVisibility = newVal;
       this.updateGridVisibility();
     },
     updateGridVisibility() {

@@ -1,16 +1,20 @@
 <template>
-  <div id="app">
-    <HelloWorld />
-  </div>
+  <v-app id="app">
+    
+    <SiteNav></SiteNav>
+    <router-view/>
+    <!-- <HelloWorld /> -->
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+// import HelloWorld from "./components/HelloWorld.vue";
+import SiteNav from '@/components/SiteNav'
 export default {
   name: "App",
   components: {
-    HelloWorld
+    // HelloWorld,
+    SiteNav
   }
 };
 </script>
