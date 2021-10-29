@@ -184,7 +184,7 @@ export default {
   watch:{
     loadedModel(model) {
       console.log("model changed", model)      
-      this.loadModel();   
+      this.loadModel(model);   
       this.enableShare = true;
     }
   },
