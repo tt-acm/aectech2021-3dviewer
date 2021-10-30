@@ -160,10 +160,10 @@ export default {
         groundGrid = gg;
       }
     },
-    updateScale() {
+    updateScale(scaleFactor) {
       if (!sceneContent) return;
-      let sF = this.scaleFactor;
-      sceneContent.scale.set(sF, sF, sF);
+      this.scaleFactor = scaleFactor;
+      sceneContent.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     }
   },
   mounted() {
