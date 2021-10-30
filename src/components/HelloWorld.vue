@@ -129,10 +129,11 @@
         <div class="mx-2" style="width: 300px;">
           <v-slider
             thumb-label
+            v-model="scaleFactor"
             hint="Scale"
             min="0.1"
             max="100"
-            @change="updateScale()"
+            @change="updateScale"
           ></v-slider>
         </div>
         <div class="mx-2">
@@ -180,7 +181,8 @@ export default {
       itemsPerPage:5,
       modelLoading: false,
       gridVisibility: true,
-      enableShare:false
+      enableShare:false,
+      scaleFactor: 1
     };
   },
   computed: {
@@ -273,7 +275,7 @@ export default {
       this.$refs.threeViewer.onBtnClickZoomAll();
     },
     updateScale() {
-      this.$refs.threeViewer.updateScale();
+      this.$refs.threeViewer.updateScale(this.scaleFactor);
     },
     updateGridVisibility() {
       this.$refs.threeViewer.setGridVisibility(this.gridVisibility);
