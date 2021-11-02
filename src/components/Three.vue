@@ -12,7 +12,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
-import * as utils from "@/utils/index.js";
 
 window.THREE = THREE;
 
@@ -154,16 +153,15 @@ export default {
     updateGridVisibility() {
       if (groundGrid) scene.remove(groundGrid);
       if (this.gridVisibility) {
-        let gg = utils.makeGrid(100000, 10, 10, "#cccccc", "#dedede");
-        gg.rotation.x = -Math.PI / 2;
+        let gg = new THREE.GridHelper(10000, 100);
         scene.add(gg);
         groundGrid = gg;
       }
     },
-    updateScale() {
+    updateScale(scaleFactor) {
       if (!sceneContent) return;
-      let sF = this.scaleFactor;
-      sceneContent.scale.set(sF, sF, sF);
+      this.scaleFactor = scaleFactor;
+      sceneContent.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     }
   },
   mounted() {
