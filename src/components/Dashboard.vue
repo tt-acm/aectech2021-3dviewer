@@ -4,11 +4,11 @@
       <Three />
     </div>
     <h1>HelloWorld</h1>
-    <div>
+    <!-- <div>
       <p>Test your backend connection.</p>
       <input type="button" value="Check" @click="runCheck" />
       <p>{{ msg }}</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
