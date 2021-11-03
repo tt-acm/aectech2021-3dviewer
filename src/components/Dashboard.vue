@@ -58,6 +58,33 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <!-- Load Existing Model Dialog -->
+      <v-dialog v-model="showModelLoaderDialog" width="500">
+        <v-card>
+          <v-card-title class="text-h5 grey lighten-2">
+            Load Existing Model
+          </v-card-title>
+
+          <v-data-table
+            :headers="LoadingTableHeaders"
+            :items="existingModels"
+            :items-per-page="itemsPerPage"
+            class="elevation-1"
+          >
+          <template v-slot:item.isPublic="{ item }">
+            <v-icon small v-if="item.isPublic"> mdi-check</v-icon>
+          </template> 
+
+          <template v-slot:item.loadingAction="{ item }">
+            <v-icon small @click="setCurrentModel(item)"> mdi-plus-circle</v-icon>
+          </template>         
+          </v-data-table>
+
+          <v-progress-linear v-show="modelLoading" color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+          <v-divider></v-divider>
+        </v-card>
+      </v-dialog>
     </div>
     
     <!-- UI for Viewer Settings -->
@@ -119,7 +146,18 @@ export default {
       filesForUpload: [],
       newModelName: null,
       modelUploading: false,
-      showNewModelDialog:false
+      showNewModelDialog:false,
+      showModelLoaderDialog: false,
+      modelLoading: false,
+      existingModels: [],
+      LoadingTableHeaders:[
+        { text: 'Model Name', value: 'name' },
+        { text: 'Public', value: 'isPublic' },
+        { text: 'Author', value: 'author.name' },        
+        { text: 'Upload Date', value: 'uploaded' },
+        { text: '', value: 'loadingAction', sortable: false },
+      ],
+      itemsPerPage:5,
     };
   },
   mounted() {
@@ -166,6 +204,54 @@ export default {
               console.error("Error adding document: ", error);
           });
       });
+    },
+    launchModelLoader() {  
+      this.existingModels = [];    
+      this.showModelLoaderDialog = true; // Launch model loader popup
+
+      if (this.user) {
+        // If logged in, get user's model
+        this.fbDB.collection('models').where('author._id', "==", this.user.uid).get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+              const docData = doc.data();
+              docData['_id'] = doc.id;
+              this.existingModels.push(docData);
+          });
+        });   
+      }
+        
+      // Next, get all public models      
+      this.fbDB.collection('models').where("isPublic", "==", true).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const docData = doc.data();
+            docData['_id'] = doc.id;
+            if (this.existingModels.map(m => m._id).indexOf(doc.id) < 0) {
+              // Checked for duplicates
+              this.existingModels.push(docData);
+            }            
+        });
+      });  
+    },
+    setCurrentModel(model) {
+      if (!model) return;
+      this.loadModel(model);   
+      this.enableShare = true;
+    },
+    loadModel(model) {
+      if (!model) return;
+
+      this.modelLoading = true
+      var modelRef = this.fbStorage.child(model.modelUrl);
+      
+      // Get the download URL
+      modelRef.getDownloadURL().then(url => {
+        this.$refs.threeViewer.onBtnClickLoadModel(url);
+      });
+    },
+    loadingCompleted(val) {
+      this.modelLoading = false;
+      this.showModelLoaderDialog = false;
+      this.zoomAll(); //Zoom in after loading
     },
   }
 };

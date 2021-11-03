@@ -72,7 +72,6 @@ export default {
 
       this.updateGridVisibility();
       this.updateScale();
-      this.onBtnClick();// start loading the rhino model
 
       window.addEventListener(
         "resize",
@@ -93,7 +92,7 @@ export default {
     },
     onMouseDown() {},
     onMouseUp() {},
-    onBtnClick() {
+    onBtnClickLoadModel(url) {
       if (sceneContent) scene.remove(sceneContent);
       let sceneObject = new THREE.Object3D();
       let rh3dmLoader = new Rhino3dmLoader();
@@ -102,8 +101,7 @@ export default {
       );
 
       const vueApp = this;
-      rh3dmLoader.load("models/story+of+life.3dm", function(model) {
-        console.log("model", model);
+      rh3dmLoader.load(url, function(model) {
         sceneObject.add(model);
         let edgesObj = new THREE.Object3D();
         for ( let i = 0; i < model.children.length; i++ ) {
