@@ -11,6 +11,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { Rhino3dmLoader } from "three/examples/jsm/loaders/3DMLoader.js";
 
 window.THREE = THREE;
 
@@ -68,8 +69,10 @@ export default {
       let light = new THREE.DirectionalLight(0xffffff, 1);
       light.position.set(-20, 40, 0);
       scene.add(light);
+
       this.updateGridVisibility();
       this.updateScale();
+      this.onBtnClick();// start loading the rhino model
 
       window.addEventListener(
         "resize",
@@ -80,14 +83,6 @@ export default {
       );
       this.onContainerResize();
 
-      let geometry = new THREE.SphereGeometry(100, 32, 32);
-      let material = new THREE.MeshBasicMaterial({
-        color: "#000000",
-        wireframe: true
-      });
-      let sphere = new THREE.Mesh(geometry, material);
-      sceneContent = sphere;
-      scene.add(sphere);
     },
     animate() {
       renderer.setAnimationLoop(() => {
@@ -98,7 +93,34 @@ export default {
     },
     onMouseDown() {},
     onMouseUp() {},
-     onBtnClickZoomAll() {
+    onBtnClick() {
+      if (sceneContent) scene.remove(sceneContent);
+      let sceneObject = new THREE.Object3D();
+      let rh3dmLoader = new Rhino3dmLoader();
+      rh3dmLoader.setLibraryPath(
+        "https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/"
+      );
+
+      const vueApp = this;
+      rh3dmLoader.load("models/story+of+life.3dm", function(model) {
+        console.log("model", model);
+        sceneObject.add(model);
+        let edgesObj = new THREE.Object3D();
+        for ( let i = 0; i < model.children.length; i++ ) {
+          let mesh = model.children[i];
+          let edges = new THREE.EdgesGeometry( mesh.geometry );
+          let line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+          edgesObj.add( line );
+        }
+        sceneObject.add(edgesObj);
+        sceneObject.rotation.x = -Math.PI / 2;
+        sceneContent = sceneObject;
+        scene.add(sceneContent);
+        console.log("loading completed");
+        vueApp.$emit('loading-complete', true);
+      });
+    },
+    onBtnClickZoomAll() {
       if (!sceneContent) return;
       // ref: https://discourse.threejs.org/t/camera-zoom-to-fit-object/936/3
       const offset = 1.25;
@@ -146,7 +168,6 @@ export default {
   mounted() {
     this.init();
     this.animate();
-    setTimeout(this.loadModel, 2000);
   }
 };
 </script>

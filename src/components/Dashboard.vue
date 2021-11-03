@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="threeContainer">
-      <Three ref="threeViewer" :gridVisibility="gridVisibility" />
+      <Three ref="threeViewer" :gridVisibility="gridVisibility" @loading-complete="loadingCompleted"/>
     </div>
     
     <!-- UI for Viewer Settings -->
@@ -60,6 +60,11 @@ export default {
     ...mapState(['user'])
   },
   methods: {
+    loadingCompleted(val) {
+      this.modelLoading = false;
+
+      this.zoomAll(); //Zoom in after loading
+    },
     zoomAll() {
       this.$refs.threeViewer.onBtnClickZoomAll();
     },
