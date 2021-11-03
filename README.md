@@ -17,4 +17,11 @@ The workshop walks participants through the process of building a web-based 3D m
 - [Slack](https://join.slack.com/t/aectechevent/shared_invite/zt-xxlg0p7q-cQeVGHDxLcpPeHYSAKe32w)
 
 ## Sample Model Files
-[![Model File 01](https://github.com/tt-acm/aectech2021-3dviewer/blob/workshop-3dm-loader/public/imgs/img.png?raw=true)](https://github.com/tt-acm/aectech2021-3dviewer/blob/workshop-3dm-loader/public/models/story%2Bof%2Blife.3dm)
+
+### Model 01
+![Model File 01](/assets/models/Model_01.png)  
+[Download](/assets/models/Model_01.3dm)
+
+### Model 02
+![Model File 02](/assets/models/Model_02.png)  
+[Download](/assets/models/Model_02.3dm)
