@@ -1,13 +1,12 @@
 <template>
   <div>    
-    <v-system-bar height="60">
-      <div style="z-index: 120; right: 10px; position: absolute;">
-        <v-btn color="success" @click="toggleLogin()">
-          Login {{loggedIn}}
+      <div style="z-index: 12;top: 10px;right: 10px; position: absolute;">
+        <v-btn color="success">
+          Login
         </v-btn>
 
+        
       </div>      
-    </v-system-bar>
 
   </div> 
 </template>

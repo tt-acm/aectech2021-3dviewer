@@ -1,14 +1,41 @@
 <template>
   <div>
     <div id="threeContainer">
-      <Three />
+      <Three ref="threeViewer" :gridVisibility="gridVisibility" />
     </div>
-    <h1>User login status:  {{user}}</h1>
-    <!-- <div>
-      <p>Test your backend connection.</p>
-      <input type="button" value="Check" @click="runCheck" />
-      <p>{{ msg }}</p>
-    </div> -->
+    
+    <!-- UI for Viewer Settings -->
+    <v-row style="margin:10px; position:absolute; left:0px; bottom:0px">
+      <div class="d-flex">
+        <div class="mx-2">
+          <v-btn small dark fab color="primary" @click="zoomAll()">
+            <v-icon dark>
+              mdi-magnify
+            </v-icon>
+          </v-btn>
+        </div>
+        <div class="mx-2" style="width: 300px;">
+          <v-slider
+            thumb-label
+            v-model="scaleFactor"
+            hint="Scale"
+            min="0.1"
+            max="100"
+            @change="updateScale"
+          ></v-slider>
+        </div>
+        <div class="mx-2">
+          <v-checkbox
+            v-model="gridVisibility"
+            dense
+            label="Grid"
+            color="grey"
+            hide-details
+            @change="updateGridVisibility()"
+          ></v-checkbox>
+        </div>
+      </div>
+    </v-row>
   </div>
 </template>
 
@@ -22,18 +49,25 @@ export default {
   },
   data() {
     return {
-      msg: ""
+      gridVisibility: true,
+      scaleFactor: 1
     };
+  },
+  mounted() {
+    this.$refs.threeViewer.setGridVisibility(this.gridVisibility);
   },
   computed: {
     ...mapState(['user'])
   },
   methods: {
-    runCheck() {
-      console.log("Making request");
-      fetch("/api/test")
-        .then(data => data.text())
-        .then(res => (this.msg = res));
+    zoomAll() {
+      this.$refs.threeViewer.onBtnClickZoomAll();
+    },
+    updateScale() {
+      this.$refs.threeViewer.updateScale(this.scaleFactor);
+    },
+    updateGridVisibility() {
+      this.$refs.threeViewer.setGridVisibility(this.gridVisibility);
     }
   }
 };
@@ -42,7 +76,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #threeContainer {
-  height: 600px;
-  width: 100%;
+  position: absolute;
+  left: 0px;
+  top:0px;
+  right:0px;
+  bottom: 0px;
+  z-index: 0;
 }
+</style>
 </style>
