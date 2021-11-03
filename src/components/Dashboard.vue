@@ -126,7 +126,7 @@ export default {
     this.$refs.threeViewer.setGridVisibility(this.gridVisibility);
   },
   computed: {
-    ...mapState(['user', 'fbStorage'])
+    ...mapState(['user', 'fbStorage', 'fbDB'])
   },
   methods: {
     loadingCompleted(val) {
@@ -147,16 +147,24 @@ export default {
       // Upload model to storage and add a record in db.
       this.fbStorage.child('models/' +  this.filesForUpload[0].name).put(this.filesForUpload[0])
       .then(snapshot => {
-          console.log("file uploaded");
-          // File Uploaded, clear out old inputs
-          this.newModelName = null;
-          this.filesForUpload = [];
-          this.modelUploading = false;
-          this.showNewModelDialog = false;
+          this.fbDB.collection('models').add({
+            name: this.newModelName,
+            modelUrl: snapshot.ref.fullPath,
+            uploaded: new Date().toISOString(),
+            author: {_id: this.user.uid, name: this.user.displayName},
+            isPublic: false,
+          }).then((docRef) => {
+              console.log("Document written with ID: ", docRef.id);
 
-      })
-      .catch((error) => {
-          console.error("Error adding document: ", error);
+              // File Uploaded, clear out old inputs
+              this.newModelName = null;
+              this.filesForUpload = [];
+              this.modelUploading = false;
+              this.showNewModelDialog = false;
+          })
+          .catch((error) => {
+              console.error("Error adding document: ", error);
+          });
       });
     },
   }
