@@ -209,19 +209,8 @@ export default {
       this.existingModels = [];    
       this.showModelLoaderDialog = true; // Launch model loader popup
 
-      if (this.user) {
-        // If logged in, get user's model
-        this.fbDB.collection('models').where('author._id', "==", this.user.uid).get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-              const docData = doc.data();
-              docData['_id'] = doc.id;
-              this.existingModels.push(docData);
-          });
-        });   
-      }
-        
-      // Next, get all public models      
-      this.fbDB.collection('models').where("isPublic", "==", true).get().then((querySnapshot) => {
+      // Get all  models      
+      this.fbDB.collection('models').get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const docData = doc.data();
             docData['_id'] = doc.id;
@@ -231,6 +220,29 @@ export default {
             }            
         });
       });  
+
+      // if (this.user) {
+      //   // If logged in, get user's model
+      //   this.fbDB.collection('models').where('author._id', "==", this.user.uid).get().then((querySnapshot) => {
+      //     querySnapshot.forEach((doc) => {
+      //         const docData = doc.data();
+      //         docData['_id'] = doc.id;
+      //         this.existingModels.push(docData);
+      //     });
+      //   });   
+      // }
+        
+      // // Next, get all public models      
+      // this.fbDB.collection('models').where("isPublic", "==", true).get().then((querySnapshot) => {
+      //   querySnapshot.forEach((doc) => {
+      //       const docData = doc.data();
+      //       docData['_id'] = doc.id;
+      //       if (this.existingModels.map(m => m._id).indexOf(doc.id) < 0) {
+      //         // Checked for duplicates
+      //         this.existingModels.push(docData);
+      //       }            
+      //   });
+      // });  
     },
     setCurrentModel(model) {
       if (!model) return;
