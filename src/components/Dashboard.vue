@@ -3,7 +3,7 @@
     <div id="threeContainer">
       <Three />
     </div>
-    <h1>HelloWorld</h1>
+    <h1>User login status:  {{user}}</h1>
     <!-- <div>
       <p>Test your backend connection.</p>
       <input type="button" value="Check" @click="runCheck" />
@@ -14,6 +14,7 @@
 
 <script>
 import Three from "./Three.vue";
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -23,6 +24,9 @@ export default {
     return {
       msg: ""
     };
+  },
+  computed: {
+    ...mapState(['user'])
   },
   methods: {
     runCheck() {
