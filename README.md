@@ -6,6 +6,12 @@ The workshop walks participants through the process of building a web-based 3D m
 ![3D Viewer Screenshot](/assets/images/scr_01.png)
 
 ## Links
-- [Live Demo](https://workshop-test-a283b.web.app/)  
-- [Guide](https://github.com/tt-acm/aectech2021-3dviewer/wiki/)  
-- [Slack](https://aectechevent.slack.com/archives/C02J5P4GRPD)
+- [Live Demo](https://workshop-test-a283b.web.app/)
+- [Slides](https://docs.google.com/presentation/d/1HOFNIUX1BC-c2bF6zPgNs7X7uvbgcwXUzfNc0dcfSk4/view)
+- [Workshop Repo](https://github.com/tt-acm/aectech2021-3dviewer)
+- [Guide](https://github.com/tt-acm/aectech2021-3dviewer/wiki/)
+- [Requirements](https://github.com/tt-acm/aectech2021-3dviewer/wiki#requirements)
+- [Checkpoints](https://github.com/tt-acm/aectech2021-3dviewer/branches/all)
+- [Code Snippets](https://github.com/tt-acm/aectech2021-3dviewer/wiki/Snippets)
+- [Steps](https://github.com/tt-acm/aectech2021-3dviewer/wiki/Steps)
+- [Slack](https://join.slack.com/t/aectechevent/shared_invite/zt-xxlg0p7q-cQeVGHDxLcpPeHYSAKe32w)
