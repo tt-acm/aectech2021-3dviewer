@@ -6,7 +6,6 @@ The workshop walks participants through the process of building a web-based 3D m
 ![3D Viewer Screenshot](/assets/images/scr_01.png)
 
 ## Links
-- [Live Demo](https://workshop-test-a283b.web.app/)
 - [Slides](https://docs.google.com/presentation/d/1HOFNIUX1BC-c2bF6zPgNs7X7uvbgcwXUzfNc0dcfSk4/view)
 - [Workshop Repo](https://github.com/tt-acm/aectech2021-3dviewer)
 - [Guide](https://github.com/tt-acm/aectech2021-3dviewer/wiki/)
