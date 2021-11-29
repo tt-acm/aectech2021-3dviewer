@@ -8,6 +8,7 @@ The workshop walks participants through the process of building a web-based 3D m
 ## Links
 - [Slides](https://docs.google.com/presentation/d/1HOFNIUX1BC-c2bF6zPgNs7X7uvbgcwXUzfNc0dcfSk4/view)
 - [Workshop Repo](https://github.com/tt-acm/aectech2021-3dviewer)
+- [Workshop Recording](https://www.youtube.com/watch?v=IdLLKFKkT1Q)
 - [Guide](https://github.com/tt-acm/aectech2021-3dviewer/wiki/)
 - [Requirements](https://github.com/tt-acm/aectech2021-3dviewer/wiki#requirements)
 - [Checkpoints](https://github.com/tt-acm/aectech2021-3dviewer/branches/all)
